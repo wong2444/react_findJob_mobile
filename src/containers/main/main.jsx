@@ -52,14 +52,16 @@ class Main extends Component {
         }
     ]
 
-    componentDidMount() {
+    async componentDidMount() {
         //登錄過(cookie中有userid),但現在沒有登錄(redux管理中沒有_id)發請求取得對象的user
         const userid = Cookies.get('userid')
         const {_id} = this.props.user
         if (userid && !_id) {
             //發送異步請求,取得user
-            this.props.getUser()
-
+             await this.props.getUser()
+            if(!this.props.user._id){
+                Cookies.set('userid', '');
+            }
         }
     }
 
@@ -70,7 +72,7 @@ class Main extends Component {
         }
         //如有userid讀取redux中的user狀態
 
-        const {user,unReadCount} = this.props
+        const {user, unReadCount} = this.props
 
 
         //如果user中沒有_id,返回null
